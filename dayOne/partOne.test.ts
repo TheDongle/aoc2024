@@ -1,6 +1,7 @@
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 import { getsortedLists } from "./partOne.ts";
+import answer from "../spoilers.json" with { type: "json" };
 
 export const samples = [
   {
@@ -16,7 +17,7 @@ export const samples = [
   {
     input: "./dayOne/puzzle1.txt",
     length: 1000,
-    output: 1938424,
+    output: answer["1"]["1"],
   },
 ];
 

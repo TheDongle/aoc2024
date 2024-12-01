@@ -2,6 +2,7 @@ import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
 import { samples as partOneSamples } from "./partOne.test.ts";
 import LocationLists from "./index.ts";
+import answer from "../spoilers.json" with { type: "json" };
 
 describe("Day One - Part 1", () => {
   partOneSamples.forEach((sample) => {
@@ -19,7 +20,7 @@ describe("Day one - Part 2", () => {
     },
     {
       input: "./dayOne/puzzle1.txt",
-      output: 22014209,
+      output: answer["1"]["2"],
     },
   ];
   describe("Main component", () => {
