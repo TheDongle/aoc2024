@@ -1,3 +1,4 @@
 .devcontainer/
 .vscode/
 deno.lock
+puzzle1.txt
