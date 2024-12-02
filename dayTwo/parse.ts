@@ -1,20 +1,10 @@
-import readTextMatches from "../dayOne/readMatches.ts";
-
 function parseNumberArray(
   pathToFile: string,
 ): number[][] {
-  const resultArray: number[][] = [[]];
-  let row = 0;
-  let column = 0;
-  readTextMatches(pathToFile, /\w+|\n/g, (v) => {
-    if (/\w+/.test(v)) {
-      resultArray[row][column++] = parseInt(v);
-    } else {
-      resultArray[++row] = [];
-      column = 0;
-    }
-  });
-  return resultArray;
+  const text = Deno.readTextFileSync(pathToFile);
+  return text.split(/\n/).map((v) =>
+    (v.match(/\d+/g) ?? []).map((v) => parseInt(v))
+  );
 }
 
 export { parseNumberArray };
