@@ -1,6 +1,6 @@
 import { describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
-import { isSafeLevel } from "./isSafeLevel.ts";
+import { isSafeLevel } from "./isSafe.ts";
 
 const safeLevelTest: {
   input: [undefined | number, number | undefined, number | undefined];

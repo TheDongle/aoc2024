@@ -1,4 +1,4 @@
-import { isSafeReport } from "./isSafeLevel.ts";
+import { isSafeReport } from "./isSafe.ts";
 import { parseNumberArray } from "./parse.ts"
 
 function countSafeReports(path: string, isDampenerOn: boolean): number {
