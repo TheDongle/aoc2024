@@ -1,12 +1,8 @@
-import { mapAscending, mapSimilarity } from "./mapper.ts";
-import { reduceMap } from "./reducer.ts";
+import { default as hashFns, type Options } from "./mapper.ts";
+import { callbacks, reduceMap } from "./reducer.ts";
 
-function compareLists(
-  pathToFile: string,
-  comparing?: "distance" | "similarity",
-): number {
-  const hashFn = comparing === "similarity" ? mapSimilarity : mapAscending;
-  return reduceMap(hashFn(pathToFile), comparing);
+function compareLists(path: string, comparing: Options = "distance"): number {
+  return reduceMap(hashFns[comparing](path), callbacks[comparing]);
 }
 
 export default compareLists;

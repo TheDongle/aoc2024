@@ -1,9 +1,12 @@
 import readMatches from "./matcher.ts";
 
-function mapAscending(pathToFile: string): { [k: string]: [number, number] } {
+type HashMap = { [index: string]: [number, number] };
+
+function mapDistance(pathToFile: string): HashMap {
   const listOne: number[] = [];
   const listTwo: number[] = [];
 
+  // Sorting the lists ascending as we read the string
   readMatches(pathToFile, /\d+/g, (v, i) => {
     const locationID = parseInt(v);
     const list = i % 2 === 0 ? listOne : listTwo;
@@ -11,21 +14,31 @@ function mapAscending(pathToFile: string): { [k: string]: [number, number] } {
     list.splice(index !== -1 ? index : list.length, 0, locationID);
   });
 
+  // Hashmap ouput is purely for the sake of parity with Part Two
   return Object.fromEntries(listOne.map((v, i) => [i, [v, listTwo[i]]]));
 }
 
-function mapSimilarity(
-  pathToFile: string,
-): { [index: number]: [number, number] } {
-  const appearances: { [index: number]: [number, number] } = {};
+function mapSimilarity(pathToFile: string): HashMap {
+  const appearances: HashMap = {};
 
+  // Count appearance of each locationId with hashmap
   readMatches(pathToFile, /\d+/g, (v, i) => {
     const locationID = parseInt(v);
     const count = appearances[locationID] ?? [0, 0];
     count[i % 2]++;
     appearances[locationID] = count;
   });
+  // [object,object]
   return appearances;
 }
 
-export { mapAscending, mapSimilarity };
+type Options = "distance" | "similarity";
+
+const hashFns = {
+  distance: mapDistance,
+  similarity: mapSimilarity,
+} as const satisfies Record<Options, typeof mapDistance>;
+
+export { mapDistance, mapSimilarity };
+export default hashFns;
+export type { HashMap, Options };

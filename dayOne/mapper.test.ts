@@ -1,6 +1,6 @@
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
-import { mapAscending } from "./mapper.ts";
+import { mapDistance } from "./mapper.ts";
 import { partOneSamples as samples } from "./index.test.ts";
 
 
@@ -8,10 +8,10 @@ import { partOneSamples as samples } from "./index.test.ts";
 describe("Day one - part One", () => {
   describe("Get Sorted Arrays", () => {
     samples.forEach((sample) => {
-      const listOne = Object.values(mapAscending(sample.input)).map((v) =>
+      const listOne = Object.values(mapDistance(sample.input)).map((v) =>
         v[0]
       );
-      const listTwo = Object.values(mapAscending(sample.input)).map((v) =>
+      const listTwo = Object.values(mapDistance(sample.input)).map((v) =>
         v[1]
       );
       it(`outputs arrays of length ${sample.length}`, () => {
