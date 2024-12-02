@@ -1,13 +1,12 @@
-import { calcDifference, getsortedLists } from "./partOne.ts";
-import { calcSimilarity, getQuantityMap } from "./partTwo.ts";
+import { mapAscending, mapSimilarity } from "./mapper.ts";
+import { reduceMap } from "./reducer.ts";
 
-const locationLists = {
-  distanceBetween: function (pathToFile: string): number {
-    return calcDifference(getsortedLists(pathToFile));
-  },
-  similarityBetween: function (pathToFile: string): number {
-    return calcSimilarity(getQuantityMap(pathToFile));
-  },
-} as const;
+function compareLists(
+  pathToFile: string,
+  comparing?: "distance" | "similarity",
+): number {
+  const hashFn = comparing === "similarity" ? mapSimilarity : mapAscending;
+  return reduceMap(hashFn(pathToFile), comparing);
+}
 
-export default locationLists;
+export default compareLists;
