@@ -23,14 +23,14 @@ describe("Day Two", () => {
   describe("Part One", () => {
     finalTest.forEach((t) => {
       it(`returns safety count of ${t.output[1]} for file ${t.input}`, () => {
-        expect(dayTwo(t.input, false)).toBe(t.output[1]);
+        expect(dayTwo(t.input, 0)).toBe(t.output[1]);
       });
     });
   });
   describe("Part Two", () => {
     finalTest.forEach((t) => {
       it(`returns safety count of ${t.output[2]} for file ${t.input}`, () => {
-        expect(dayTwo(t.input, true)).toBe(t.output[2]);
+        expect(dayTwo(t.input, 1)).toBe(t.output[2]);
       });
     });
   });

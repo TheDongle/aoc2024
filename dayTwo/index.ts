@@ -1,9 +1,9 @@
 import { isSafeReport } from "./isSafe.ts";
-import { parseNumberArray } from "./parse.ts"
+import { parseNumberArray } from "./parse.ts";
 
-function countSafeReports(path: string, isDampenerOn: boolean): number {
+function countSafeReports(path: string, tolerance: number): number {
   return parseNumberArray(path).reduce(
-    (a, b) => isSafeReport(b, isDampenerOn) ? a + 1 : a,
+    (a, b) => isSafeReport(b, tolerance) ? a + 1 : a,
     0,
   );
 }

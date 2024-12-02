@@ -3,21 +3,9 @@ import { expect } from "@std/expect";
 import { isSafeLevel } from "./isSafe.ts";
 
 const safeLevelTest: {
-  input: [undefined | number, number | undefined, number | undefined];
+  input: [number, number, number];
   output: boolean;
 }[] = [
-  {
-    input: [undefined, 0, undefined],
-    output: true,
-  },
-  {
-    input: [undefined, undefined, undefined],
-    output: true,
-  },
-  {
-    input: [undefined, 0, 1],
-    output: true,
-  },
   {
     input: [1, 2, 3],
     output: true,
@@ -38,9 +26,9 @@ const safeLevelTest: {
 
 describe("Safe level", () => {
   safeLevelTest.forEach((t) => {
-    const [current, prev, next] = t.input;
+    const [prev, current, next] = t.input;
     it(`returns ${t.output} for ${JSON.stringify(t.input)}`, () => {
-      expect(isSafeLevel(current, prev, next)).toBe(t.output);
+      expect(isSafeLevel(prev, current, next)).toBe(t.output);
     });
   });
 });
