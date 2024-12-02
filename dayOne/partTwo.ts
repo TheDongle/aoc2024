@@ -1,25 +1,24 @@
 import readMatches from "./readMatches.ts";
 
-type QuantityMap = { [index: number]: [number, number] };
+type QuantityMap = Map<number, [number, number]>;
 
 function getQuantityMap(pathToFile: string): QuantityMap {
-  const appearances: QuantityMap = {};
+  const appearances: QuantityMap = new Map();
 
   readMatches(pathToFile, /\d+/g, (v, i) => {
     const locationID = parseInt(v);
-    const count = appearances[locationID] ?? [0, 0];
+    const count = appearances.get(locationID) ?? [0, 0];
     count[i % 2]++;
-    appearances[locationID] = count;
+    appearances.set(locationID, count);
   });
   return appearances;
 }
 
 function calcSimilarity(appearances: QuantityMap): number {
-  return Object.entries(appearances).reduce((a, b) => {
-    const [locationID, quantities] = b;
-    const [leftCount, rightCount] = quantities;
-    return a += (parseInt(locationID) * leftCount) * rightCount;
-  }, 0);
+  return appearances.entries().reduce(
+    (a, b) => a += (b[0] * b[1][0]) * b[1][1],
+    0,
+  );
 }
 
 export { calcSimilarity, getQuantityMap };
