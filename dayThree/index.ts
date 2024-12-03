@@ -1,19 +1,17 @@
 import matchEach from "../dayOne/matcher.ts";
 
-export const mulPattern = /mul\(\d{1,3},\d{1,3}\)/g;
+export const mulArgsPattern = /\d+/g;
 
-export const numInMulPattern = /\d+/g;
+export const mulFnPattern = /mul\(\d{1,3},\d{1,3}\)/g;
 
-export const inBetweenDosPattern = /(do\(\)|^).*?(don't\(\)|$)/gs
+export const filterPattern = /(do\(\)|^).*?(don't\(\)|$)/gs;
 
-export const numInMullPattern = /\d+/g;
-
-export function mulWrapper(mulFn: string): number {
-  const [num1, num2] = mulFn.match(numInMullPattern) ?? ["0", "0"];
+export function mul(mulString: string): number {
+  const [num1, num2] = mulString.match(mulArgsPattern) ?? ["0", "0"];
   return parseInt(num1) * parseInt(num2);
 }
 
-function mullOver(text: string, pattern: RegExp): string {
+function mulOver(text: string, pattern: RegExp): string {
   let filtered = "";
   matchEach(text, pattern, (v) => {
     filtered += v;
@@ -24,11 +22,11 @@ function mullOver(text: string, pattern: RegExp): string {
 export function mulOverAndOver(path: string, filter: boolean): number {
   let text = Deno.readTextFileSync(path);
   if (filter) {
-    text = mullOver(text, inBetweenDosPattern);
+    text = mulOver(text, filterPattern);
   }
   let sum = 0;
-  matchEach(text, mulPattern, (v) => {
-    sum += mulWrapper(v);
+  matchEach(text, mulFnPattern, (v) => {
+    sum += mul(v);
   });
   return sum;
 }

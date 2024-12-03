@@ -1,12 +1,6 @@
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
-import {
-  inBetweenDosPattern,
-  mulOverAndOver,
-  mulPattern,
-  mulWrapper,
-  numInMulPattern,
-} from "./index.ts";
+import {mulOverAndOver, mul, mulArgsPattern, mulFnPattern, filterPattern} from "./index.ts";
 import answer from "../spoilers.json" with { type: "json" };
 
 const multTest = {
@@ -16,7 +10,7 @@ const multTest = {
 
 describe("Mul() Pattern", () => {
   it(`gets regexp array of length ${multTest.output} from example`, () => {
-    const expected = multTest.input.match(mulPattern);
+    const expected = multTest.input.match(mulFnPattern);
     expect(expected).toHaveLength(4);
   });
 });
@@ -28,7 +22,7 @@ const digitTest = {
 
 describe("Num in Mul Pattern", () => {
   it(`gets numbers ${digitTest.output} from ${digitTest.input}`, () => {
-    const expected = digitTest.input.match(numInMulPattern);
+    const expected = digitTest.input.match(mulArgsPattern);
     expect(expected).toMatchObject({ ...digitTest.output });
   });
 });
@@ -47,7 +41,7 @@ const wrappertests: { input: string; output: number }[] = [{
 describe("mulwrapper", () => {
   wrappertests.forEach((t) => {
     it(`correctly multiplies ${t.input}`, () => {
-      expect(mulWrapper(t.input)).toBe(t.output);
+      expect(mul(t.input)).toBe(t.output);
     });
   });
 });
@@ -82,7 +76,7 @@ const dosAnddontsTests: { name: string; input: string; length: number }[] = [{
 
 describe("In between dos pattern", () => {
   dosAnddontsTests.forEach((t) => {
-    const expected = t.input.match(inBetweenDosPattern);
+    const expected = t.input.match(filterPattern);
     it(`retrieves sections of length ${t.name} from ${t.name}`, () => {
       expect(expected).toHaveLength(t.length);
     });
