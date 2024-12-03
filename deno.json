@@ -1,6 +1,9 @@
 {
   "tasks": {
-    "test:one": "deno test --allow-read ./dayOne/index.test.ts"
+    "test": "deno test --allow-read",
+    "test:one": "deno test --allow-read ./dayOne/",
+    "test:two": "deno test --allow-read ./dayTwo/",
+    "test:three": "deno test --allow-read ./dayThree/"
   },
   "lint": {
     "rules": {

@@ -2,12 +2,12 @@ import readMatches from "./matcher.ts";
 
 type HashMap = { [index: string]: [number, number] };
 
-function mapDistance(pathToFile: string): HashMap {
+function mapDistance(text: string): HashMap {
   const listOne: number[] = [];
   const listTwo: number[] = [];
 
   // Sorting the lists ascending as we read the string
-  readMatches(pathToFile, /\d+/g, (v, i) => {
+  readMatches(text, /\d+/g, (v, i) => {
     const locationID = parseInt(v);
     const list = i % 2 === 0 ? listOne : listTwo;
     const index = list.findIndex((ele) => ele >= locationID);
@@ -18,11 +18,11 @@ function mapDistance(pathToFile: string): HashMap {
   return Object.fromEntries(listOne.map((v, i) => [i, [v, listTwo[i]]]));
 }
 
-function mapSimilarity(pathToFile: string): HashMap {
+function mapSimilarity(text: string): HashMap {
   const appearances: HashMap = {};
 
   // Count appearance of each locationId with hashmap
-  readMatches(pathToFile, /\d+/g, (v, i) => {
+  readMatches(text, /\d+/g, (v, i) => {
     const locationID = parseInt(v);
     const count = appearances[locationID] ?? [0, 0];
     count[i % 2]++;

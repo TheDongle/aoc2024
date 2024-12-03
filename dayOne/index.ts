@@ -2,7 +2,8 @@ import { default as hashFns, type Options } from "./mapper.ts";
 import { callbacks, reduceMap } from "./reducer.ts";
 
 function compareLists(path: string, comparing: Options = "distance"): number {
-  return reduceMap(hashFns[comparing](path), callbacks[comparing]);
+  const text = Deno.readTextFileSync(path);
+  return reduceMap(hashFns[comparing](text), callbacks[comparing]);
 }
 
 export default compareLists;
