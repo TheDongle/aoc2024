@@ -5,25 +5,13 @@ import answer from "../spoilers.json" with { type: "json" };
 
 const multTest = {
   input: Deno.readTextFileSync("./dayThree/example.txt"),
-  output: 4,
+  output: 8,
 };
 
 describe("Mul() Pattern", () => {
   it(`gets regexp array of length ${multTest.output} from example`, () => {
-    const expected = multTest.input.match(patterns[1]);
-    expect(expected).toHaveLength(4);
-  });
-});
-
-const digitTest = {
-  input: "mul(12,1)",
-  output: ["12", "1"],
-};
-
-describe("Num in Mul Pattern", () => {
-  it(`gets numbers ${digitTest.output} from ${digitTest.input}`, () => {
-    const expected = digitTest.input.match(patterns[0]);
-    expect(expected).toMatchObject({ ...digitTest.output });
+    const expected = multTest.input.match(patterns[0]);
+    expect(expected).toHaveLength(multTest.output);
   });
 });
 
@@ -57,7 +45,7 @@ const dosAnddontsTests: { name: string; input: string; length: number }[] = [{
 
 describe("In between dos pattern", () => {
   dosAnddontsTests.forEach((t) => {
-    const expected = t.input.match(patterns[2]);
+    const expected = t.input.match(patterns[1]);
     it(`retrieves sections of length ${t.name} from ${t.name}`, () => {
       expect(expected).toHaveLength(t.length);
     });

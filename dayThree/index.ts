@@ -1,13 +1,12 @@
 const mul = (a: number, b: number): number => a * b;
 
-const patterns: [mulArgs: RegExp, mulFn: RegExp, filter: RegExp] = [
-  /\d+/g,
-  /mul\(\d{1,3},\d{1,3}\)/g,
+const patterns: [mulFn: RegExp, filter: RegExp] = [
+  /(?<=mul\()\d{1,3}(?=,\d{1,3}\))|(?<=mul\(\d{1,3},)\d{1,3}(?=\))/g,
   /(do\(\)|^).*?(don't\(\)|$)/gs,
 ];
 
 function mulOver(path: string, filter: boolean): number {
-  const stack = filter ? patterns.slice() : patterns.slice(0, 2);
+  const stack = filter ? patterns.slice() : patterns.slice(0, 1);
 
   function mulInner(text: string, stack: RegExp[]): string[] {
     const matches: string[] = text.match(stack.pop()!) ?? [""];
