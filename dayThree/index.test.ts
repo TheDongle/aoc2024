@@ -1,6 +1,6 @@
 import { expect } from "@std/expect";
 import { describe, it } from "@std/testing/bdd";
-import {mulOverAndOver, mul, mulArgsPattern, mulFnPattern, filterPattern} from "./index.ts";
+import { default as mulOver, patterns } from "./index.ts";
 import answer from "../spoilers.json" with { type: "json" };
 
 const multTest = {
@@ -10,7 +10,7 @@ const multTest = {
 
 describe("Mul() Pattern", () => {
   it(`gets regexp array of length ${multTest.output} from example`, () => {
-    const expected = multTest.input.match(mulFnPattern);
+    const expected = multTest.input.match(patterns[1]);
     expect(expected).toHaveLength(4);
   });
 });
@@ -22,27 +22,8 @@ const digitTest = {
 
 describe("Num in Mul Pattern", () => {
   it(`gets numbers ${digitTest.output} from ${digitTest.input}`, () => {
-    const expected = digitTest.input.match(mulArgsPattern);
+    const expected = digitTest.input.match(patterns[0]);
     expect(expected).toMatchObject({ ...digitTest.output });
-  });
-});
-
-const wrappertests: { input: string; output: number }[] = [{
-  input: "mul(12,1)",
-  output: 12,
-}, {
-  input: "mul(0,0)",
-  output: 0,
-}, {
-  input: "mul(121,2)",
-  output: 242,
-}];
-
-describe("mulwrapper", () => {
-  wrappertests.forEach((t) => {
-    it(`correctly multiplies ${t.input}`, () => {
-      expect(mul(t.input)).toBe(t.output);
-    });
   });
 });
 
@@ -59,7 +40,7 @@ const partOneTest: { name: string; input: string; output: number }[] = [{
 describe("Part one - Main", () => {
   partOneTest.forEach((t) => {
     it(`returns ${t.output} from ${t.name}`, () => {
-      expect(mulOverAndOver(t.input, false)).toBe(t.output);
+      expect(mulOver(t.input, false)).toBe(t.output);
     });
   });
 });
@@ -76,7 +57,7 @@ const dosAnddontsTests: { name: string; input: string; length: number }[] = [{
 
 describe("In between dos pattern", () => {
   dosAnddontsTests.forEach((t) => {
-    const expected = t.input.match(filterPattern);
+    const expected = t.input.match(patterns[2]);
     it(`retrieves sections of length ${t.name} from ${t.name}`, () => {
       expect(expected).toHaveLength(t.length);
     });
@@ -100,7 +81,7 @@ const partTwoTest: { name: string; input: string; output: number }[] = [{
 describe("Part Two - Main", () => {
   partTwoTest.forEach((t) => {
     it(`returns ${t.output} from ${t.name}`, () => {
-      expect(mulOverAndOver(t.input, true)).toBe(t.output);
+      expect(mulOver(t.input, true)).toBe(t.output);
     });
   });
 });
