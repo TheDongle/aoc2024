@@ -3,7 +3,8 @@
     "test": "deno test --allow-read",
     "test:one": "deno test --allow-read ./dayOne/",
     "test:two": "deno test --allow-read ./dayTwo/",
-    "test:three": "deno test --allow-read ./dayThree/"
+    "test:three": "deno test --allow-read ./dayThree/",
+    "test:four": "deno test --allow-read ./dayFour/"
   },
   "lint": {
     "rules": {
@@ -19,6 +20,7 @@
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.8",
     "@std/expect": "jsr:@std/expect@^1.0.8",
+    "@std/streams": "jsr:@std/streams@^1.0.8",
     "@std/testing": "jsr:@std/testing@^1.0.5"
   }
 }
