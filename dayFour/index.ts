@@ -1,70 +1,95 @@
 import TextParser from "../dayTwo/parse.ts";
 
-function reverseString(str: string): string {
-  let reversed = "";
-  for (let i = str.length - 1; i >= 0; i--) {
-    reversed += str.charAt(i);
-  }
-  return reversed;
-}
 
-function solveWordSearch(path: string, words = ["XMAS"]): number {
+// Only Part One passed so far
+// 
+// Plan for part two involves a Map full of "A" positions
+// Counts as a cross when there's two instances of one A
+// 
+export type Position = [Row: number, Col: number];
+
+export const directions = {
+  right: [0, 1],
+  downRight: [1, 1],
+  down: [1, 0],
+  downLeft: [1, -1],
+  left: [0, -1],
+  upLeft: [-1, -1],
+  up: [-1, 0],
+  upRight: [-1, 1],
+} as const;
+
+type Direction = keyof typeof directions;
+
+export const nextPosition = (
+  position: Position,
+  direction: Direction,
+): Position => {
+  const [rowMod, colMod] = directions[direction];
+  const [row, col] = position;
+  return [row + rowMod, col + colMod];
+};
+
+const diagonal = [
+  "downRight",
+  "downLeft",
+  "upLeft",
+  "upRight",
+] satisfies Direction[];
+
+const cardinal = [
+  "right",
+  "down",
+  "left",
+  "up",
+] satisfies Direction[];
+
+function solveWordSearch(
+  path: string,
+  partTwo = false,
+): number {
+  const target = partTwo ? "MAS" : "XMAS";
+
+  const directions = partTwo ? [...diagonal] : [...diagonal, ...cardinal];
+
   const wordSearch = new TextParser(path).stringArrays(
     /\w/g,
   );
-  const reversedWords = words.map((v) => reverseString(v));
-  const targets = [...words, ...reversedWords];
+
+  const search = (direction: Direction, startingPosition: Position) =>
+    traverseDepth(wordSearch, target, direction, startingPosition);
+
   let resultCount = 0;
   for (let row = 0; row < wordSearch.length; row++) {
     for (let col = 0; col < wordSearch[0].length; col++) {
-      for (const t of targets) {
-        resultCount += countFourWays([row, col], t, wordSearch);
+      for (const d of directions) {
+        resultCount += search(d, [row, col]);
       }
     }
   }
   return resultCount;
 }
 
-function countFourWays(
-  startPosition: [number, number],
-  targetWord: string,
+export function traverseDepth(
   wordSearch: string[][],
+  targetWord: string,
+  direction: Direction,
+  position: Position,
+  count = 0,
 ): number {
-  const travelOneWay = (
-    startPosition: [number, number],
-    targetWord: string,
-    modifier: [number, number],
-  ): number => {
-    let [rowInner, colInner] = startPosition;
-    const [rowMod, colMod] = modifier;
-    let found = "";
-    let count = 0;
-    while (count < targetWord.length) {
-      found += wordSearch[rowInner][colInner];
-      rowInner += rowMod;
-      colInner += colMod;
-      if (found[count] !== targetWord[count++]) {
-        return 0;
-      }
-    }
+  if (count >= targetWord.length) {
     return 1;
-  };
-
-  const [row, col] = startPosition;
-  let count = 0;
-  if (col <= wordSearch[row].length - targetWord.length) {
-    count += travelOneWay([row, col], targetWord, [0, 1]);
-    if (row <= wordSearch.length - targetWord.length) {
-      count += travelOneWay([row, col], targetWord, [1, 1]);
-    }
   }
-  if (row <= wordSearch.length - targetWord.length) {
-    count += travelOneWay([row, col], targetWord, [1, 0]);
-    if (targetWord.length - 1 <= col) {
-      count += travelOneWay([row, col], targetWord, [1, -1]);
-    }
+  if (wordSearch[position[0]]?.[position[1]] !== targetWord[count]) {
+    return 0;
   }
-  return count;
+  return traverseDepth(
+    wordSearch,
+    targetWord,
+    direction,
+    nextPosition(position, direction),
+    count + 1,
+  );
 }
 
 export default solveWordSearch;
