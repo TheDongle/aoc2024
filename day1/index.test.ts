@@ -5,17 +5,17 @@ import answer from "../spoilers.json" with { type: "json" };
 
 export const partOneSamples = [
   {
-    input: "./dayOne/sample1.txt",
+    input: "./day1/sample1.txt",
     length: 6,
     output: 11,
   },
   {
-    input: "./dayOne/sample2.txt",
+    input: "./day1/sample2.txt",
     length: 2,
     output: 0,
   },
   {
-    input: "./dayOne/puzzle1.txt",
+    input: "./day1/puzzle.txt",
     length: 1000,
     output: answer["1"]["1"],
   },
@@ -32,11 +32,11 @@ describe("Day One - Part 1", () => {
 describe("Day one - Part 2", () => {
   const partTwoSamples = [
     {
-      input: "./dayOne/sample1.txt",
+      input: "./day1/sample1.txt",
       output: 31,
     },
     {
-      input: "./dayOne/puzzle1.txt",
+      input: "./day1/puzzle.txt",
       output: answer["1"]["2"],
     },
   ];

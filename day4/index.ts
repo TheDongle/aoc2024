@@ -1,4 +1,4 @@
-import TextParser from "../dayTwo/parse.ts";
+import TextParser from "../day2/parse.ts";
 import { type Direction, nextPosition, paths } from "./compass.ts";
 
 export function searchOneDirection(

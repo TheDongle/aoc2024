@@ -1,11 +1,6 @@
 {
   "tasks": {
-    "test": "deno test --allow-read",
-    "test:one": "deno test --allow-read ./dayOne/",
-    "test:two": "deno test --allow-read ./dayTwo/",
-    "test:three": "deno test --allow-read ./dayThree/",
-    "test:four": "deno test --allow-read ./dayFour/",
-    "test:five": "deno test --allow-read ./dayFive/"
+    "test": "deno test --allow-read"
   },
   "lint": {
     "rules": {

@@ -1,4 +1,4 @@
-import TextParser from "../dayTwo/parse.ts";
+import TextParser from "../day2/parse.ts";
 
 // Only Part One finished today
 

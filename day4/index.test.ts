@@ -12,13 +12,13 @@ const mainTests: {
 }[] = [
   {
     name: "Tutorial",
-    input: "./dayFour/example.txt",
+    input: "./day4/example.txt",
     output1: 18,
     output2: 9,
   },
   {
     name: "Puzzle",
-    input: "./dayFour/puzzle1.txt",
+    input: "./day4/puzzle.txt",
     output1: answer["4"]["1"],
     output2: answer["4"]["2"],
   },

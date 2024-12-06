@@ -5,17 +5,17 @@ import answer from "../spoilers.json" with { type: "json" };
 
 const samples = [
   {
-    input: Deno.readTextFileSync("./dayOne/sample1.txt"),
+    input: Deno.readTextFileSync("./day1/sample1.txt"),
     length: 6,
     output: 11,
   },
   {
-    input: Deno.readTextFileSync("./dayOne/sample2.txt"),
+    input: Deno.readTextFileSync("./day1/sample2.txt"),
     length: 2,
     output: 0,
   },
   {
-    input: Deno.readTextFileSync("./dayOne/puzzle1.txt"),
+    input: Deno.readTextFileSync("./day1/puzzle.txt"),
     length: 1000,
     output: answer["1"]["1"],
   },

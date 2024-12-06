@@ -3,7 +3,7 @@ import { describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
 
 describe("parseNumberArray", () => {
-  const result = parseNumberArray("./dayTwo/puzzle1.txt");
+  const result = parseNumberArray("./day2/puzzle.txt");
   it(`returns array with correct length`, () => {
     expect(result.length).toBe(1000);
   });

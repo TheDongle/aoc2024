@@ -4,7 +4,7 @@ import { default as mulOver, patterns } from "./index.ts";
 import answer from "../spoilers.json" with { type: "json" };
 
 const multTest = {
-  input: Deno.readTextFileSync("./dayThree/example.txt"),
+  input: Deno.readTextFileSync("./day3/example.txt"),
   output: 8,
 };
 
@@ -17,11 +17,11 @@ describe("Mul() Pattern", () => {
 
 const partOneTest: { name: string; input: string; output: number }[] = [{
   name: "tutorial example",
-  input: "./dayThree/example.txt",
+  input: "./day3/example.txt",
   output: 161,
 }, {
   name: "puzzle input",
-  input: "./dayThree/puzzle1.txt",
+  input: "./day3/puzzle.txt",
   output: answer["3"]["1"],
 }];
 
@@ -35,11 +35,11 @@ describe("Part one - Main", () => {
 
 const dosAnddontsTests: { name: string; input: string; length: number }[] = [{
   name: "tutorial example 2",
-  input: Deno.readTextFileSync("./dayThree/example2.txt"),
+  input: Deno.readTextFileSync("./day3/example2.txt"),
   length: 2,
 }, {
   name: "Custom test",
-  input: Deno.readTextFileSync("./dayThree/customTest.txt"),
+  input: Deno.readTextFileSync("./day3/customTest.txt"),
   length: 2,
 }];
 
@@ -54,15 +54,15 @@ describe("In between dos pattern", () => {
 
 const partTwoTest: { name: string; input: string; output: number }[] = [{
   name: "tutorial example",
-  input: "./dayThree/example2.txt",
+  input: "./day3/example2.txt",
   output: 48,
 }, {
   name: "puzzle input",
-  input: "./dayThree/puzzle1.txt",
+  input: "./day3/puzzle.txt",
   output: answer["3"]["2"],
 }, {
   name: "custom test 1",
-  input: "./dayThree/customTest.txt",
+  input: "./day3/customTest.txt",
   output: 14,
 }];
 
