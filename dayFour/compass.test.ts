@@ -1,6 +1,6 @@
 import { describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
-import { nextPosition, type Position } from "./compass.ts";
+import { nextPosition } from "./compass.ts";
 
 const positionTest = [
   ["a", "b", "c", "d", "e"],
@@ -9,37 +9,37 @@ const positionTest = [
 ];
 
 describe("nextPosition", () => {
-  const start: Position = [1, 2];
+  const start: [number, number] = [1, 2];
   it("moves E", () => {
-    const [row, col] = nextPosition(start, "E");
+    const [row, col] = nextPosition(start[0], start[1], "E");
     expect(positionTest[row][col]).toBe("dd");
   });
   it("moves SE", () => {
-    const [row, col] = nextPosition(start, "SE");
+    const [row, col] = nextPosition(start[0], start[1], "SE");
     expect(positionTest[row][col]).toBe("ddd");
   });
   it("moves S", () => {
-    const [row, col] = nextPosition(start, "S");
+    const [row, col] = nextPosition(start[0], start[1], "S");
     expect(positionTest[row][col]).toBe("ccc");
   });
   it("moves SW", () => {
-    const [row, col] = nextPosition(start, "SW");
+    const [row, col] = nextPosition(start[0], start[1], "SW");
     expect(positionTest[row][col]).toBe("bbb");
   });
   it("moves W", () => {
-    const [row, col] = nextPosition(start, "W");
+    const [row, col] = nextPosition(start[0], start[1], "W");
     expect(positionTest[row][col]).toBe("bb");
   });
   it("moves NW", () => {
-    const [row, col] = nextPosition(start, "NW");
+    const [row, col] = nextPosition(start[0], start[1], "NW");
     expect(positionTest[row][col]).toBe("b");
   });
   it("moves N", () => {
-    const [row, col] = nextPosition(start, "N");
+    const [row, col] = nextPosition(start[0], start[1], "N");
     expect(positionTest[row][col]).toBe("c");
   });
   it("moves NE", () => {
-    const [row, col] = nextPosition(start, "NE");
+    const [row, col] = nextPosition(start[0], start[1], "NE");
     expect(positionTest[row][col]).toBe("d");
   });
 });

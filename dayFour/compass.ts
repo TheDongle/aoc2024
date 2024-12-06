@@ -1,5 +1,3 @@
-export type Position = [Row: number, Col: number];
-
 const directions = {
   E: [0, 1],
   SE: [1, 1],
@@ -14,27 +12,28 @@ const directions = {
 type Direction = keyof typeof directions;
 
 const nextPosition = (
-  position: Position,
+  row: number,
+  col: number,
   direction: Direction,
-): Position => {
+): [number, number] => {
   const [rowMod, colMod] = directions[direction];
-  const [row, col] = position;
   return [row + rowMod, col + colMod];
 };
 
-const diagonalDirections = [
-  "SE",
-  "SW",
-  "NW",
-  "NE",
-] satisfies Direction[];
+const paths: Record<"diagonal" | "cardinal", Direction[]> = {
+  diagonal: [
+    "SE",
+    "SW",
+    "NW",
+    "NE",
+  ],
+  cardinal: [
+    "E",
+    "S",
+    "W",
+    "N",
+  ],
+};
 
-const cardinalDirections = [
-  "E",
-  "S",
-  "W",
-  "N",
-] satisfies Direction[];
-
-export { cardinalDirections, diagonalDirections, nextPosition };
+export { nextPosition, paths };
 export type { Direction };

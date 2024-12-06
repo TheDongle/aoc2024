@@ -1,31 +1,27 @@
 import TextParser from "../dayTwo/parse.ts";
-import {
-  cardinalDirections,
-  diagonalDirections,
-  type Direction,
-  nextPosition,
-  type Position,
-} from "./compass.ts";
+import { type Direction, nextPosition, paths } from "./compass.ts";
 
 export function searchOneDirection(
   wordsearchOneDirection: string[][],
   targetWord: string,
   direction: Direction,
-  position: Position,
+  position: number[],
   midpoint = "",
   count = 0,
 ): string {
   if (count >= targetWord.length) {
     return midpoint;
   }
-  if (wordsearchOneDirection[position[0]]?.[position[1]] !== targetWord[count]) {
+  if (
+    wordsearchOneDirection[position[0]]?.[position[1]] !== targetWord[count]
+  ) {
     return "";
   }
   return searchOneDirection(
     wordsearchOneDirection,
     targetWord,
     direction,
-    nextPosition(position, direction),
+    nextPosition(position[0], position[1], direction),
     count === Math.floor(targetWord.length / 2)
       ? JSON.stringify(position)
       : midpoint,
@@ -44,12 +40,12 @@ const solverOptions: {
 } = {
   1: {
     target: "XMAS",
-    directions: [...diagonalDirections, ...cardinalDirections],
+    directions: [...paths.diagonal, ...paths.cardinal],
     finalCount: (map: MidPointMap) => [...map.values()].reduce((a, b) => a + b),
   },
   2: {
     target: "MAS",
-    directions: [...diagonalDirections],
+    directions: [...paths.diagonal],
     finalCount: (map: MidPointMap) =>
       [...map.values()].reduce((a, b) => b === 2 ? a + 1 : a, 0),
   },
@@ -70,9 +66,17 @@ function wordSearchSolver(
   for (let row = 0; row < wordsearchOneDirection.length; row++) {
     for (let col = 0; col < wordsearchOneDirection[0].length; col++) {
       for (const d of directions) {
-        const searchOneDirectionResult = searchOneDirection(wordsearchOneDirection, target, d, [row, col]);
+        const searchOneDirectionResult = searchOneDirection(
+          wordsearchOneDirection,
+          target,
+          d,
+          [row, col],
+        );
         if (searchOneDirectionResult) {
-          midpoints.set(searchOneDirectionResult, (midpoints.get(searchOneDirectionResult) ?? 0) + 1);
+          midpoints.set(
+            searchOneDirectionResult,
+            (midpoints.get(searchOneDirectionResult) ?? 0) + 1,
+          );
         }
       }
     }
