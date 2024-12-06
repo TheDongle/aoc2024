@@ -1,7 +1,7 @@
 import { describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
-import solveWordSearch from "./index.ts";
-import { nextPosition, type Position, traverseDepth } from "./index.ts";
+import solveWordsearchOneDirection from "./index.ts";
+import { searchOneDirection } from "./index.ts";
 import answer from "../spoilers.json" with { type: "json" };
 
 const mainTests: {
@@ -20,66 +20,23 @@ const mainTests: {
     name: "Puzzle",
     input: "./dayFour/puzzle1.txt",
     output1: answer["4"]["1"],
-    output2: 0,
+    output2: answer["4"]["2"],
   },
 ];
 
 describe("Day Four - Part One", () => {
   mainTests.forEach((t) => {
     it(`finds ${t.output1} results in ${t.name}`, () => {
-      expect(solveWordSearch(t.input)).toBe(t.output1);
+      expect(solveWordsearchOneDirection(t.input)).toBe(t.output1);
     });
   });
 });
 
-// describe("Day Four - Part Two", () => {
-//   mainTests.forEach((t) => {
-//     it(`finds ${t.output2} results in ${t.name}`, () => {
-//       expect(solveWordSearch(t.input, true)).toBe(t.output2);
-//     });
-//   });
-// });
-
-
-const thingum = [
-  ["a", "b", "c", "d", "e"],
-  ["aa", "bb", "cc", "dd", "ee"],
-  ["aaa", "bbb", "ccc", "ddd", "eee"],
-];
-
-describe("nextPosition", () => {
-  const start: Position = [1, 2];
-  it("moves right", () => {
-    const [row, col] = nextPosition(start, "right");
-    expect(thingum[row][col]).toBe("dd");
-  });
-  it("moves downRight", () => {
-    const [row, col] = nextPosition(start, "downRight");
-    expect(thingum[row][col]).toBe("ddd");
-  });
-  it("moves down", () => {
-    const [row, col] = nextPosition(start, "down");
-    expect(thingum[row][col]).toBe("ccc");
-  });
-  it("moves downLeft", () => {
-    const [row, col] = nextPosition(start, "downLeft");
-    expect(thingum[row][col]).toBe("bbb");
-  });
-  it("moves left", () => {
-    const [row, col] = nextPosition(start, "left");
-    expect(thingum[row][col]).toBe("bb");
-  });
-  it("moves upLeft", () => {
-    const [row, col] = nextPosition(start, "upLeft");
-    expect(thingum[row][col]).toBe("b");
-  });
-  it("moves up", () => {
-    const [row, col] = nextPosition(start, "up");
-    expect(thingum[row][col]).toBe("c");
-  });
-  it("moves upRight", () => {
-    const [row, col] = nextPosition(start, "upRight");
-    expect(thingum[row][col]).toBe("d");
+describe("Day Four - Part Two", () => {
+  mainTests.forEach((t) => {
+    it(`finds ${t.output2} results in ${t.name}`, () => {
+      expect(solveWordsearchOneDirection(t.input, 2)).toBe(t.output2);
+    });
   });
 });
 
@@ -90,29 +47,29 @@ const thingy = [
 ];
 
 describe("Depth First", () => {
-  it("traverses right", () => {
-    expect(traverseDepth(thingy, "123", "right", [0, 0])).toBe(1);
+  it("traverses E", () => {
+    expect(searchOneDirection(thingy, "123", "E", [0, 0])).toBeTruthy;
   });
-  it("traverses downRight", () => {
-    expect(traverseDepth(thingy, "159", "downRight", [0, 0])).toBe(1);
+  it("traverses SE", () => {
+    expect(searchOneDirection(thingy, "159", "SE", [0, 0])).toBeTruthy;
   });
-  it("traverses down", () => {
-    expect(traverseDepth(thingy, "146", "down", [0, 0])).toBe(1);
+  it("traverses S", () => {
+    expect(searchOneDirection(thingy, "146", "S", [0, 0])).toBeTruthy;
   });
-  it("traverses downLeft", () => {
-    expect(traverseDepth(thingy, "356", "downLeft", [0, 2])).toBe(1);
+  it("traverses SW", () => {
+    expect(searchOneDirection(thingy, "356", "SW", [0, 2])).toBeTruthy;
   });
-  it("traverses left", () => {
-    expect(traverseDepth(thingy, "321", "left", [0, 2])).toBe(1);
+  it("traverses W", () => {
+    expect(searchOneDirection(thingy, "321", "W", [0, 2])).toBeTruthy;
   });
-  it("traverses upLeft", () => {
-    expect(traverseDepth(thingy, "951", "upLeft", [2, 2])).toBe(1);
+  it("traverses NW", () => {
+    expect(searchOneDirection(thingy, "951", "NW", [2, 2])).toBeTruthy;
   });
-  it("traverses up", () => {
-    expect(traverseDepth(thingy, "852", "up", [2, 1])).toBe(1);
+  it("traverses N", () => {
+    expect(searchOneDirection(thingy, "852", "N", [2, 1])).toBeTruthy;
   });
-  it("traverses upRight", () => {
-    expect(traverseDepth(thingy, "653", "upRight", [2, 0])).toBe(1);
+  it("traverses NE", () => {
+    expect(searchOneDirection(thingy, "653", "NE", [2, 0])).toBeTruthy;
   });
 });
 

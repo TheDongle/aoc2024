@@ -1,95 +1,83 @@
 import TextParser from "../dayTwo/parse.ts";
+import {
+  cardinalDirections,
+  diagonalDirections,
+  type Direction,
+  nextPosition,
+  type Position,
+} from "./compass.ts";
 
-
-// Only Part One passed so far
-// 
-// Plan for part two involves a Map full of "A" positions
-// Counts as a cross when there's two instances of one A
-// 
-export type Position = [Row: number, Col: number];
-
-export const directions = {
-  right: [0, 1],
-  downRight: [1, 1],
-  down: [1, 0],
-  downLeft: [1, -1],
-  left: [0, -1],
-  upLeft: [-1, -1],
-  up: [-1, 0],
-  upRight: [-1, 1],
-} as const;
-
-type Direction = keyof typeof directions;
-
-export const nextPosition = (
-  position: Position,
-  direction: Direction,
-): Position => {
-  const [rowMod, colMod] = directions[direction];
-  const [row, col] = position;
-  return [row + rowMod, col + colMod];
-};
-
-const diagonal = [
-  "downRight",
-  "downLeft",
-  "upLeft",
-  "upRight",
-] satisfies Direction[];
-
-const cardinal = [
-  "right",
-  "down",
-  "left",
-  "up",
-] satisfies Direction[];
-
-function solveWordSearch(
-  path: string,
-  partTwo = false,
-): number {
-  const target = partTwo ? "MAS" : "XMAS";
-
-  const directions = partTwo ? [...diagonal] : [...diagonal, ...cardinal];
-
-  const wordSearch = new TextParser(path).stringArrays(
-    /\w/g,
-  );
-
-  const search = (direction: Direction, startingPosition: Position) =>
-    traverseDepth(wordSearch, target, direction, startingPosition);
-
-  let resultCount = 0;
-  for (let row = 0; row < wordSearch.length; row++) {
-    for (let col = 0; col < wordSearch[0].length; col++) {
-      for (const d of directions) {
-        resultCount += search(d, [row, col]);
-      }
-    }
-  }
-  return resultCount;
-}
-
-export function traverseDepth(
-  wordSearch: string[][],
+export function searchOneDirection(
+  wordsearchOneDirection: string[][],
   targetWord: string,
   direction: Direction,
   position: Position,
+  midpoint = "",
   count = 0,
-): number {
+): string {
   if (count >= targetWord.length) {
-    return 1;
+    return midpoint;
   }
-  if (wordSearch[position[0]]?.[position[1]] !== targetWord[count]) {
-    return 0;
+  if (wordsearchOneDirection[position[0]]?.[position[1]] !== targetWord[count]) {
+    return "";
   }
-  return traverseDepth(
-    wordSearch,
+  return searchOneDirection(
+    wordsearchOneDirection,
     targetWord,
     direction,
     nextPosition(position, direction),
+    count === Math.floor(targetWord.length / 2)
+      ? JSON.stringify(position)
+      : midpoint,
     count + 1,
   );
 }
 
-export default solveWordSearch;
+type MidPointMap = Map<string, number>;
+
+const solverOptions: {
+  [index: number]: {
+    target: string;
+    directions: Direction[];
+    finalCount: (arg0: MidPointMap) => number;
+  };
+} = {
+  1: {
+    target: "XMAS",
+    directions: [...diagonalDirections, ...cardinalDirections],
+    finalCount: (map: MidPointMap) => [...map.values()].reduce((a, b) => a + b),
+  },
+  2: {
+    target: "MAS",
+    directions: [...diagonalDirections],
+    finalCount: (map: MidPointMap) =>
+      [...map.values()].reduce((a, b) => b === 2 ? a + 1 : a, 0),
+  },
+};
+
+function wordSearchSolver(
+  path: string,
+  part: 1 | 2 = 1,
+): number {
+  const { target, directions, finalCount } = solverOptions[part];
+
+  const midpoints: MidPointMap = new Map();
+
+  const wordsearchOneDirection = new TextParser(path).stringArrays(
+    /\w/g,
+  );
+
+  for (let row = 0; row < wordsearchOneDirection.length; row++) {
+    for (let col = 0; col < wordsearchOneDirection[0].length; col++) {
+      for (const d of directions) {
+        const searchOneDirectionResult = searchOneDirection(wordsearchOneDirection, target, d, [row, col]);
+        if (searchOneDirectionResult) {
+          midpoints.set(searchOneDirectionResult, (midpoints.get(searchOneDirectionResult) ?? 0) + 1);
+        }
+      }
+    }
+  }
+  return finalCount(midpoints);
+}
+
+export default wordSearchSolver;
