@@ -2,8 +2,8 @@ import { expect } from "@std/expect";
 import {
   type Operation,
   operations,
+  Queue,
   sumOfValidEquations,
-  updateQueue,
 } from "./index.ts";
 import { describe, it } from "@std/testing/bdd";
 import answer from "../spoilers.json" with { type: "json" };
@@ -13,7 +13,7 @@ const updateQueueTest: {
     ops: Operation[];
     target: number;
     currentValue: number;
-    queue: (number | undefined)[];
+    queue: Queue;
   };
   output: number[];
 }[] = [
@@ -22,7 +22,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 0,
       currentValue: 1,
-      queue: [undefined],
+      queue: new Queue(1),
     },
     output: [],
   },
@@ -31,7 +31,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 1,
       currentValue: 1,
-      queue: [undefined],
+      queue: new Queue(1),
     },
     output: [1],
   },
@@ -40,7 +40,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 2,
       currentValue: 1,
-      queue: [1],
+      queue: new Queue(1),
     },
     output: [1, 2],
   },
@@ -49,7 +49,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 3,
       currentValue: 2,
-      queue: [1, 2],
+      queue: new Queue(1, 2),
     },
     output: [2, 3],
   },
@@ -58,7 +58,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"], operations["concat"]],
       target: 11,
       currentValue: 1,
-      queue: [1],
+      queue: new Queue(1),
     },
     output: [1, 2, 11],
   },
@@ -68,9 +68,9 @@ describe("Update Queue", () => {
   updateQueueTest.forEach((t) => {
     const { ops, target, currentValue, queue } = t.input;
     it(`returns update queue ${JSON.stringify(t.output)}`, () => {
-      const expected = updateQueue(ops, target, currentValue, queue);
+      queue.update(ops, target, currentValue);
       // console.log(expected);
-      expect(expected).toMatchObject({
+      expect(queue.value).toMatchObject({
         ...t.output,
       });
     });
