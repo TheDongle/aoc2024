@@ -67,37 +67,30 @@ export function findAntiNodes(
 }
 
 export function countAntiNodes(path: string): number {
-  const antennaGraph = new Map<string, Position[]>();
   const map = new TextParser(path).newLineArray();
+
+  const antennaeSeen = new Map<string, Position[]>();
   const antiNodesSeen = new Set<string>();
 
-  const isAntiNodeValid = (antiPos: Position, currAntenna: string) => {
-    const [antiRow, antiCol] = antiPos;
-    const element = map[antiRow]?.[antiCol];
-    return element !== undefined && element !== currAntenna;
-  };
-
-  const setAntiNodes = (
-    antennaPositions: Position[],
-    currPos: Position,
-    currAntenna: string,
-  ) => {
-    for (const antennaPos of antennaPositions) {
-      for (const antiPosition of findAntiNodes(currPos, antennaPos)) {
-        if (isAntiNodeValid(antiPosition, currAntenna)) {
+  const handleAntenna = (currAntenna: string, currPos: Position) => {
+    const prevPositions = antennaeSeen.get(currAntenna) ?? [];
+    for (const prevPos of prevPositions) {
+      for (const antiPosition of findAntiNodes(currPos, prevPos)) {
+        const [antiRow, antiCol] = antiPosition;
+        const currAntiNode = map[antiRow]?.[antiCol];
+        if (currAntiNode !== undefined && currAntiNode !== currAntenna) {
           antiNodesSeen.add(JSON.stringify(antiPosition));
         }
       }
     }
+    antennaeSeen.set(currAntenna, [...prevPositions, currPos]);
   };
 
   for (let row = 0; row < map.length; row++) {
     for (let col = 0; col < map[row].length; col++) {
       const currAntenna = map[row][col];
       if (/\w/.test(currAntenna)) {
-        const prevAntennaPositions = antennaGraph.get(currAntenna) ?? [];
-        setAntiNodes(prevAntennaPositions, [row, col], currAntenna);
-        antennaGraph.set(currAntenna, [...prevAntennaPositions, [row, col]]);
+        handleAntenna(currAntenna, [row, col]);
       }
     }
   }
