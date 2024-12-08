@@ -26,5 +26,5 @@ function mulOver(path: string, filter: boolean): number {
   return sum;
 }
 
-export { patterns };
+export { mul, patterns };
 export default mulOver;

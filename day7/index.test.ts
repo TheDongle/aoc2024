@@ -3,18 +3,17 @@ import {
   default as sumOfValidEquations,
   type Operation,
   operations,
-  Queue,
+  updateQueue,
 } from "./index.ts";
 import { describe, it } from "@std/testing/bdd";
 import answer from "../spoilers.json" with { type: "json" };
 
 const updateQueueTest: {
   input: {
-    
     ops: Operation[];
     target: number;
     currentValue: number;
-    queue: Queue;
+    queue: number[];
   };
   output: number[];
 }[] = [
@@ -23,7 +22,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 0,
       currentValue: 1,
-      queue: new Queue(1),
+      queue: [1],
     },
     output: [],
   },
@@ -32,7 +31,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 1,
       currentValue: 1,
-      queue: new Queue(1),
+      queue: [1],
     },
     output: [1],
   },
@@ -41,7 +40,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 2,
       currentValue: 1,
-      queue: new Queue(1),
+      queue: [1],
     },
     output: [1, 2],
   },
@@ -50,7 +49,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"]],
       target: 3,
       currentValue: 2,
-      queue: new Queue(1, 2),
+      queue: [1, 2],
     },
     output: [2, 3],
   },
@@ -59,7 +58,7 @@ const updateQueueTest: {
       ops: [operations["mul"], operations["sum"], operations["concat"]],
       target: 11,
       currentValue: 1,
-      queue: new Queue(1),
+      queue: [1],
     },
     output: [1, 2, 11],
   },
@@ -69,9 +68,7 @@ describe("Update Queue", () => {
   updateQueueTest.forEach((t) => {
     const { ops, target, currentValue, queue } = t.input;
     it(`returns update queue ${JSON.stringify(t.output)}`, () => {
-      queue.update(ops, target, currentValue);
-      // console.log(expected);
-      expect(queue.value).toMatchObject({
+      expect(updateQueue(queue, currentValue, target, ...ops)).toMatchObject({
         ...t.output,
       });
     });

@@ -1,4 +1,5 @@
 import TextParser from "../day2/parse.ts";
+import { mul } from "../day3/index.ts";
 
 // Parsing the data
 type StrippedEquation = { target: number; values: number[] };
@@ -13,44 +14,30 @@ const getEquations = (path: string): StrippedEquation[] => (
 // using functions to stand-in for missing operators
 type Operation = (arg0: number, arg1: number) => number;
 
+// I thought it would be funny to import "mul()"
 const operations = {
-  "mul": (prev: number, next: number) => prev * next,
+  mul,
   "sum": (prev: number, next: number) => prev + next,
   "concat": (prev: number, next: number) => parseInt(`${prev}${next}`),
 } as const satisfies Record<"mul" | "sum" | "concat", Operation>;
 
-// Need the queue to be initialised with at least one value
-// that way the operations formulae don't have to account for undefined
-class Queue {
-  private arr: number[];
-  constructor(value: number, ...values: number[]) {
-    this.arr = [value, ...values];
-  }
-  get value(): number[] {
-    return this.arr;
-  }
-  get length(): number {
-    return this.arr.length;
-  }
-  includes(value: number): boolean {
-    return this.arr.includes(value);
-  }
-  update(
-    ops: Operation[],
-    target: number,
-    currentValue: number,
-  ): void {
-    const nextQueue: number[] = [];
-    for (let i = 0; i < this.arr.length; i++) {
-      for (const fn of ops) {
-        const calculated = fn(this.arr[i], currentValue);
-        if (calculated <= target) {
-          nextQueue.push(calculated);
-        }
+// cycles through all possible operations for a value and the last value/s
+function updateQueue(
+  queue: number[],
+  currentValue: number,
+  target: number,
+  ...operations: Operation[]
+): number[] {
+  const nextQueue: number[] = [];
+  for (let i = 0; i < queue.length; i++) {
+    for (const fn of operations) {
+      const calculated = fn(queue[i], currentValue);
+      if (calculated <= target) {
+        nextQueue.push(calculated);
       }
     }
-    this.arr = nextQueue;
   }
+  return nextQueue;
 }
 
 // Main function works for part 1 and part 2
@@ -63,17 +50,19 @@ function sumOfValidEquations(
   let total = 0;
   for (const eq of equations) {
     const { target, values } = eq;
-    const queue = new Queue(values[0]);
+    let queue = [values[0]];
     let i = 1;
     while (i < values.length && 0 < queue.length) {
-      queue.update(operations, target, values[i]);
+      queue = updateQueue(queue, values[i], target, ...operations);
       i++;
     }
-    total += queue.includes(target) ? target : 0;
+    if (queue.includes(target)) {
+      total += target;
+    }
   }
   return total;
 }
 
 export type { Operation };
-export { operations, Queue };
+export { operations, updateQueue };
 export default sumOfValidEquations;
