@@ -15,9 +15,11 @@ const nextPosition = (
   row: number,
   col: number,
   direction: Direction,
+  rowMultipler = 1,
+  colMultipler = 1,
 ): [number, number] => {
   const [rowMod, colMod] = directions[direction];
-  return [row + rowMod, col + colMod];
+  return [row + (rowMod * rowMultipler), col + (colMod * colMultipler)];
 };
 
 const paths: Record<"diagonal" | "cardinal", Direction[]> = {

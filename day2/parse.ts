@@ -6,6 +6,9 @@ class TextParser {
   public newLineArray(): string[] {
     return this.text.split(/\n/);
   }
+  public oneDimensionalArray(): string[] {
+    return this.text.replace(/\n/g, "").split("");
+  }
   public stringArrays(splitBy = /\w+/g): string[][] {
     return this.newLineArray().map((v) => (v.match(splitBy) ?? []));
   }
