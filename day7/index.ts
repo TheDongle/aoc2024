@@ -11,9 +11,9 @@ const getEquations = (path: string): StrippedEquation[] => (
 );
 
 // using functions to stand-in for missing operators
-export type Operation = (arg0: number, arg1: number) => number;
+type Operation = (arg0: number, arg1: number) => number;
 
-export const operations = {
+const operations = {
   "mul": (prev: number, next: number) => prev * next,
   "sum": (prev: number, next: number) => prev + next,
   "concat": (prev: number, next: number) => parseInt(`${prev}${next}`),
@@ -21,7 +21,7 @@ export const operations = {
 
 // Need the queue to be initialised with at least one value
 // that way the operations formulae don't have to account for undefined
-export class Queue {
+class Queue {
   private arr: number[];
   constructor(value: number, ...values: number[]) {
     this.arr = [value, ...values];
@@ -55,7 +55,7 @@ export class Queue {
 
 // Main function works for part 1 and part 2
 // missing operators are parametised as rest arguments
-export function sumOfValidEquations(
+function sumOfValidEquations(
   path: string,
   ...operations: Operation[]
 ): number {
@@ -73,3 +73,7 @@ export function sumOfValidEquations(
   }
   return total;
 }
+
+export type { Operation };
+export { operations, Queue };
+export default sumOfValidEquations;

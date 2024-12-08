@@ -1,15 +1,16 @@
 import { expect } from "@std/expect";
 import {
+  default as sumOfValidEquations,
   type Operation,
   operations,
   Queue,
-  sumOfValidEquations,
 } from "./index.ts";
 import { describe, it } from "@std/testing/bdd";
 import answer from "../spoilers.json" with { type: "json" };
 
 const updateQueueTest: {
   input: {
+    
     ops: Operation[];
     target: number;
     currentValue: number;
