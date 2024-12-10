@@ -5,14 +5,17 @@ const { cardinal: cardinalDirections } = paths;
 
 // identfies trail heads and calls breadth-first search
 // returns total of all searches
-function countAllTrailHeads(path: string): number {
+function countAccessibleTrails(
+  path: string,
+  uniqueEndsOnly = true,
+): number {
   const trailMap = new TextParser(path).newLineArray();
   let outputTotal = 0;
 
   for (let row = 0; row < trailMap.length; row++) {
     for (let col = 0; col < trailMap[row].length; col++) {
       if (trailMap[row][col] === "0") {
-        outputTotal += followTrail(trailMap, row, col);
+        outputTotal += countConnectedEnds(trailMap, row, col, uniqueEndsOnly);
       }
     }
   }
@@ -20,10 +23,11 @@ function countAllTrailHeads(path: string): number {
 }
 
 // counts all trail ends connected to starting location
-function followTrail(
+function countConnectedEnds(
   trailMap: string[],
   trailHeadRow: number,
   trailHeadCol: number,
+  uniqueEndsOnly = true,
   locationsVisited = new Set<string>(),
   outputCount = 0,
 ): number {
@@ -40,16 +44,20 @@ function followTrail(
         const nextStep = parseInt(trailMap[nextRow]?.[nextCol]);
         // has correct Gradient
         if (nextStep === prevStep + 1) {
-          const nextLocationStringified = JSON.stringify(nextLocation);
-          // is new
-          if (!locationsVisited.has(nextLocationStringified)) {
+          // is unique, if necessary
+          if (
+            !(uniqueEndsOnly &&
+              locationsVisited.has(JSON.stringify(nextLocation)))
+          ) {
             // is trail head
             if (nextStep === 9) {
               outputCount += 1;
             } else {
               trailLocationQueue.push(nextLocation);
             }
-            locationsVisited.add(nextLocationStringified);
+            if (uniqueEndsOnly) {
+              locationsVisited.add(JSON.stringify(nextLocation));
+            }
           }
         }
       }
@@ -58,4 +66,4 @@ function followTrail(
   return outputCount;
 }
 
-export { countAllTrailHeads, followTrail };
+export { countAccessibleTrails, countConnectedEnds };

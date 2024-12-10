@@ -1,6 +1,6 @@
 import { describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
-import { countAllTrailHeads, followTrail } from "./index.ts";
+import { countAccessibleTrails, countConnectedEnds } from "./index.ts";
 import answer from "../spoilers.json" with { type: "json" };
 
 const trailendtests: {
@@ -78,27 +78,38 @@ describe("Count trail ends", () => {
     const { input, output } = t;
     const { trailMap, row, col } = input;
     it(`returns ${output} from test ${i}`, () => {
-      expect(followTrail(trailMap, row, col)).toBe(output);
+      expect(countConnectedEnds(trailMap, row, col)).toBe(output);
     });
   });
 });
 
-const mainTest: { input: string; output: number }[] = [
+const mainTest: { input: string; output1: number; output2: number }[] = [
   {
     input: "./day10/example.txt",
-    output: 36,
+    output1: 36,
+    output2: 81,
   },
   {
     input: "./day10/puzzle.txt",
-    output: answer["10"]["1"],
+    output1: answer["10"]["1"],
+    output2: answer["10"]["2"],
   },
 ];
 
 describe("Day 10: Part 1", () => {
   mainTest.forEach((t) => {
-    const { input, output } = t;
-    it(`returns ${output} from test file ${input}`, () => {
-      expect(countAllTrailHeads(input)).toBe(output);
+    const { input, output1 } = t;
+    it(`returns ${output1} from test file ${input}`, () => {
+      expect(countAccessibleTrails(input)).toBe(output1);
+    });
+  });
+});
+
+describe("Day 10: Part 2", () => {
+  mainTest.forEach((t) => {
+    const { input, output2 } = t;
+    it(`returns ${output2} from test file ${input}`, () => {
+      expect(countAccessibleTrails(input, false)).toBe(output2);
     });
   });
 });
