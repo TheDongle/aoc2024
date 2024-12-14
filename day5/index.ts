@@ -1,4 +1,5 @@
 import TextParser from "../day2/parse.ts";
+import { mergeSort } from "./sort.ts";
 
 type Rules = Map<number, Set<number>>;
 type Manuals = number[][];
@@ -14,8 +15,9 @@ function defineMan(path: string): { rules: Rules; manuals: Manuals } {
 }
 
 const sortMan = (manual: number[], rules: Rules): number[] =>
-  manual.toSorted((a, b) =>
-    rules.get(a)?.has(b) ? -1 : rules.get(b)?.has(a) ? 1 : 0
+  mergeSort(
+    manual.slice(),
+    (a, b) => rules.get(a)?.has(b) ? -1 : rules.get(b)?.has(a) ? 1 : 0,
   );
 
 function manMiddle(
@@ -47,5 +49,5 @@ function mainMan(
   return manuals.reduce((a, b) => a + manMiddle(rules, b, middlesOf), 0);
 }
 
-export { manMiddle, sortMan, defineMan };
+export { defineMan, manMiddle, sortMan };
 export default mainMan;
