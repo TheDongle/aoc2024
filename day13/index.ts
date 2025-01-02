@@ -130,18 +130,18 @@ export function drawDiamond(
   let k = n;
   // Diamond middle
   while (k > 0) {
-    let j = k - 1;
-    diamond[i] = Array(j);
-    const mid = Math.floor(k / 2);
-    while (j > mid) {
-      diamond[i][j] = updateScore(diamond[i - 1][j + 1], a);
-      result = updateResult(diamond[i][j], result);
-      j--;
+    let r = diamond[i - 1].length - 2;
+    diamond[i] = Array(r);
+    const mid = Math.floor(r / 2);
+    while (r > mid) {
+      diamond[i][r] = updateScore(diamond[i - 1][r + 1], a);
+      result = updateResult(diamond[i][r], result);
+      r--;
     }
-    while (j >= 0) {
-      diamond[i][j] = updateScore(diamond[i - 1][j], b);
-      result = updateResult(diamond[i][j], result);
-      j--;
+    while (r >= 0) {
+      diamond[i][r] = updateScore(diamond[i - 1][r], b);
+      result = updateResult(diamond[i][r], result);
+      r--;
     }
     i++;
     k--;
