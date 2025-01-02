@@ -85,27 +85,29 @@ export function setupClawMachines(
 
 type Score = { location: Coordinate; cost: number };
 
-function updateScore(score: Score, button: Button): Score {
-  return {
-    location: claw(score.location).moveWith(button),
-    cost: score.cost + button.cost,
-  };
-}
-
 export function drawDiamond(
   a: Button,
   b: Button,
   prize: Prize,
   n = 100,
 ): number {
+  function updateScore(score: Score, button: Button): Score {
+    return {
+      location: claw(score.location).moveWith(button),
+      cost: score.cost + button.cost,
+    };
+  }
+  function updateResult(prev: Score, result: number): number {
+    if (claw(prev.location).hasPrize(prize)) {
+      return Math.min(prev.cost, result);
+    }
+    return result;
+  }
+
   let result = Infinity;
   const diamond: Score[][] = Array(n * 2 + 1);
   // win condition
-  const lookForPrize = (prev: Score) => {
-    if (claw(prev.location).hasPrize(prize)) {
-      result = Math.min(prev.cost, result);
-    }
-  };
+
   // Diamond tip
   diamond[0] = [{ location: { x: 0, y: 0 }, cost: 0 }];
   let i = 1;
@@ -118,7 +120,7 @@ export function drawDiamond(
         location: claw(diamond[i - 1][j].location).moveWith(a),
         cost: diamond[i - 1][j].cost + a.cost,
       };
-      lookForPrize(diamond[i][j]);
+      result = updateResult(diamond[i][j], result);
       j++;
     }
     while (j <= i) {
@@ -126,7 +128,7 @@ export function drawDiamond(
         location: claw(diamond[i - 1][j - 1].location).moveWith(b),
         cost: diamond[i - 1][j - 1].cost + b.cost,
       };
-      lookForPrize(diamond[i][j]);
+      result = updateResult(diamond[i][j], result);
       j++;
     }
     i++;
@@ -142,7 +144,7 @@ export function drawDiamond(
         location: claw(diamond[i - 1][j + 1].location).moveWith(a),
         cost: diamond[i - 1][j + 1].cost + a.cost,
       };
-      lookForPrize(diamond[i][j]);
+      result = updateResult(diamond[i][j], result);
       j--;
     }
     while (j >= 0) {
@@ -150,7 +152,7 @@ export function drawDiamond(
         location: claw(diamond[i - 1][j].location).moveWith(b),
         cost: diamond[i - 1][j].cost + b.cost,
       };
-      lookForPrize(diamond[i][j]);
+      result = updateResult(diamond[i][j], result);
       j--;
     }
     i++;
