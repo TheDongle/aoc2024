@@ -72,24 +72,25 @@ export class ClawMachine {
 export function setupClawMachines(
   // path to txt file
   path: string,
+  adjustment: number,
 ): ClawMachine[] {
   const matches: string[] = Deno.readTextFileSync(path).match(/(\+|-)*\d+/g) ??
     [];
   const output: ClawMachine[] = Array(Math.floor(matches.length / 6));
   for (let i = 0; i < matches.length; i += 6) {
     const a = {
-      x: parseInt(matches[i]),
-      y: parseInt(matches[i + 1]),
+      x: adjustment + parseInt(matches[i]),
+      y: adjustment + parseInt(matches[i + 1]),
       cost: 3,
     };
     const b = {
-      x: parseInt(matches[i + 2]),
-      y: parseInt(matches[i + 3]),
+      x: adjustment + parseInt(matches[i + 2]),
+      y: adjustment + parseInt(matches[i + 3]),
       cost: 1,
     };
     const prize = {
-      x: parseInt(matches[i + 4]),
-      y: parseInt(matches[i + 5]),
+      x: adjustment + parseInt(matches[i + 4]),
+      y: adjustment + parseInt(matches[i + 5]),
     };
     output[Math.floor((i + 1) / 6)] = new ClawMachine({ a, b, prize });
   }

@@ -8,17 +8,22 @@ const setupTest = {
   prize: { x: 8400, y: 5400 },
 };
 
-const created = setupClawMachines("./day13/example.txt");
-
 describe("Setup", () => {
   it("Creates claw machines", () => {
+    const created = setupClawMachines("./day13/example.txt", 0);
     const { a, b, prize } = created[0];
     expect(a.strength).toMatchObject(setupTest.a);
     expect(b.strength).toMatchObject(setupTest.b);
     expect(prize.location).toMatchObject(setupTest.prize);
   });
+  it("adds 10000000000000", () => {
+    const created = setupClawMachines("./day13/example.txt", 10000000000000);
+    const { a, b, prize } = created[0];
+    expect(prize.location.x).toBe(setupTest.prize.x + 10000000000000);
+    expect(a.strength.x).toBe(setupTest.a.x + 10000000000000);
+    expect(b.strength.y).toBe(setupTest.b.y + 10000000000000);
+  });
 });
-
 
 describe("Claw", () => {
   it("Moves with button", () => {
