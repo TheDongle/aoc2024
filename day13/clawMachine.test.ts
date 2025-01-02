@@ -18,10 +18,9 @@ describe("Setup", () => {
   });
   it("adds 10000000000000", () => {
     const created = setupClawMachines("./day13/example.txt", 10000000000000);
-    const { a, b, prize } = created[0];
+    const { prize } = created[0];
     expect(prize.location.x).toBe(setupTest.prize.x + 10000000000000);
-    expect(a.strength.x).toBe(setupTest.a.x + 10000000000000);
-    expect(b.strength.y).toBe(setupTest.b.y + 10000000000000);
+    expect(prize.location.y).toBe(setupTest.prize.y + 10000000000000);
   });
 });
 

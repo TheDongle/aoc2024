@@ -79,13 +79,13 @@ export function setupClawMachines(
   const output: ClawMachine[] = Array(Math.floor(matches.length / 6));
   for (let i = 0; i < matches.length; i += 6) {
     const a = {
-      x: adjustment + parseInt(matches[i]),
-      y: adjustment + parseInt(matches[i + 1]),
+      x: parseInt(matches[i]),
+      y: parseInt(matches[i + 1]),
       cost: 3,
     };
     const b = {
-      x: adjustment + parseInt(matches[i + 2]),
-      y: adjustment + parseInt(matches[i + 3]),
+      x: parseInt(matches[i + 2]),
+      y: parseInt(matches[i + 3]),
       cost: 1,
     };
     const prize = {
