@@ -127,9 +127,9 @@ export function drawDiamond(
     }
     i++;
   }
-  let k = n;
   // Diamond middle
-  while (k > 0) {
+  n = i - 1;
+  while (n > 0) {
     let r = diamond[i - 1].length - 2;
     diamond[i] = Array(r);
     const mid = Math.floor(r / 2);
@@ -144,7 +144,7 @@ export function drawDiamond(
       r--;
     }
     i++;
-    k--;
+    n--;
   }
   return result !== Infinity ? result : 0;
 }
