@@ -111,18 +111,19 @@ export function drawDiamond(
   diamond[0] = [{ location: { x: 0, y: 0 }, cost: 0 }];
   let i = 1;
   while (i <= n) {
-    diamond[i] = Array(i + 1);
-    let j = 0;
-    const mid = Math.floor(i / 2);
-    while (j <= mid) {
-      diamond[i][j] = updateScore(diamond[i - 1][j], a);
-      result = updateResult(diamond[i][j], result);
-      j++;
+    let l = 0;
+    const r = diamond[i - 1].length + 1;
+    let m = Math.ceil(r / 2);
+    diamond[i] = Array(r);
+    while (l < m) {
+      diamond[i][l] = updateScore(diamond[i - 1][l], a);
+      result = updateResult(diamond[i][l], result);
+      l++;
     }
-    while (j <= i) {
-      diamond[i][j] = updateScore(diamond[i - 1][j - 1], b);
-      result = updateResult(diamond[i][j], result);
-      j++;
+    while (m < r) {
+      diamond[i][m] = updateScore(diamond[i - 1][m - 1], b);
+      result = updateResult(diamond[i][m], result);
+      m++;
     }
     i++;
   }
