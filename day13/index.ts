@@ -92,10 +92,9 @@ export function drawDiamond(
   n = 100,
 ): number {
   function updateScore(score: Score, button: Button): Score {
-    return {
-      location: claw(score.location).moveWith(button),
-      cost: score.cost + button.cost,
-    };
+    const location = claw(score.location).moveWith(button);
+    const cost = score.cost + button.cost;
+    return { location, cost };
   }
   function updateResult(prev: Score, result: number): number {
     if (claw(prev.location).hasPrize(prize)) {
@@ -114,20 +113,14 @@ export function drawDiamond(
   while (i <= n) {
     diamond[i] = Array(i + 1);
     let j = 0;
-    const half = Math.floor(i / 2);
-    while (j <= half) {
-      diamond[i][j] = {
-        location: claw(diamond[i - 1][j].location).moveWith(a),
-        cost: diamond[i - 1][j].cost + a.cost,
-      };
+    const mid = Math.floor(i / 2);
+    while (j <= mid) {
+      diamond[i][j] = updateScore(diamond[i - 1][j], a);
       result = updateResult(diamond[i][j], result);
       j++;
     }
     while (j <= i) {
-      diamond[i][j] = {
-        location: claw(diamond[i - 1][j - 1].location).moveWith(b),
-        cost: diamond[i - 1][j - 1].cost + b.cost,
-      };
+      diamond[i][j] = updateScore(diamond[i - 1][j - 1], b);
       result = updateResult(diamond[i][j], result);
       j++;
     }
@@ -138,20 +131,14 @@ export function drawDiamond(
   while (k > 0) {
     let j = k - 1;
     diamond[i] = Array(j);
-    const half = Math.floor(k / 2);
-    while (j > half) {
-      diamond[i][j] = {
-        location: claw(diamond[i - 1][j + 1].location).moveWith(a),
-        cost: diamond[i - 1][j + 1].cost + a.cost,
-      };
+    const mid = Math.floor(k / 2);
+    while (j > mid) {
+      diamond[i][j] = updateScore(diamond[i - 1][j + 1], a);
       result = updateResult(diamond[i][j], result);
       j--;
     }
     while (j >= 0) {
-      diamond[i][j] = {
-        location: claw(diamond[i - 1][j].location).moveWith(b),
-        cost: diamond[i - 1][j].cost + b.cost,
-      };
+      diamond[i][j] = updateScore(diamond[i - 1][j], b);
       result = updateResult(diamond[i][j], result);
       j--;
     }
