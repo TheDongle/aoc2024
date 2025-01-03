@@ -21,7 +21,7 @@ describe("One claw machine", () => {
       }),
       100,
     );
-    expect(ans).toBe(280);
+    expect(ans.cost).toBe(280);
   });
 });
 

@@ -5,11 +5,10 @@ import {
   setupClawMachines,
 } from "./clawMachine.ts";
 
-
 export function simulateGames(
   clawMachine: ClawMachine,
   limit: number,
-): number {
+): { remainder: Coordinate; cost: number } {
   function greedyDivide(target: Coordinate, c: Coordinate): number {
     const xFactor = Math.max(Math.floor(target.x / c.x), 0);
     const yFactor = Math.max(Math.floor(target.y / c.y), 0);
@@ -28,49 +27,56 @@ export function simulateGames(
     return { x: a.x + b.x, y: a.y + b.y };
   }
 
+  function greediest(
+    a: Button,
+    b: Button,
+  ): { aCount: number; bCount: number; remainder: Coordinate; cost: number } {
+    const aCount = Math.min(
+      greedyDivide(clawMachine.prize.location, a.strength),
+      limit,
+    );
+    const bCount = greedyDivide(
+      subtract(clawMachine.prize.location, multiply(a.strength, aCount)),
+      b.strength,
+    );
+    const aMul = multiply(a.strength, aCount);
+    const bMul = multiply(b.strength, bCount);
+    const remainder = subtract(clawMachine.prize.location, add(aMul, bMul));
+
+    return {
+      aCount,
+      bCount,
+      remainder,
+      cost: (a.cost * aCount) + (b.cost * bCount),
+    };
+  }
+
   function greedyGobbles(
     a: Button,
     b: Button,
     limit: number,
-    aCount?: number,
-    bCount?: number,
-  ): number {
-    aCount ??= Math.min(
-      greedyDivide(clawMachine.prize.location, a.strength),
-      limit,
-    );
-    bCount ??= greedyDivide(
-      subtract(clawMachine.prize.location, multiply(a.strength, aCount)),
-      b.strength,
-    );
+  ): { remainder: Coordinate; cost: number } {
+    let { aCount, bCount, remainder, cost } = greediest(a, b);
+    limit = 100;
 
-    if (bCount < 0) {
-      bCount = 0;
-    }
+    while (aCount > 0 && limit > bCount) {
+      const aMul = multiply(a.strength, aCount);
+      const bMul = multiply(b.strength, bCount);
+      const remainder = subtract(clawMachine.prize.location, add(aMul, bMul));
 
-    if (aCount < 0 || limit < bCount) {
-      return 0;
-    }
-
-    const aMul = multiply(a.strength, aCount);
-    const bMul = multiply(b.strength, bCount);
-
-    const remainder = subtract(clawMachine.prize.location, add(aMul, bMul));
-
-    if (remainder.x === 0 && remainder.y === 0) {
-      return (a.cost * aCount) + (b.cost * bCount);
-    }
-
-    return greedyGobbles(
-      a,
-      b,
-      limit,
-      aCount - 1,
-      greedyDivide(
-        subtract(clawMachine.prize.location, multiply(a.strength, aCount - 1)),
+      if (remainder.x === 0 && remainder.y === 0) {
+        return {
+          remainder: { x: 0, y: 0 },
+          cost: (a.cost * aCount) + (b.cost * bCount),
+        };
+      }
+      aCount--;
+      bCount = greedyDivide(
+        subtract(clawMachine.prize.location, multiply(a.strength, aCount)),
         b.strength,
-      ),
-    );
+      );
+    }
+    return { remainder, cost };
   }
 
   let { a, b } = clawMachine;
@@ -85,7 +91,10 @@ export function partOne(path: string): number {
   const clawMachines = setupClawMachines(path, 0);
   let sum = 0;
   for (const machine of clawMachines) {
-    sum += simulateGames(machine, 100);
+    const { remainder, cost } = simulateGames(machine, 100);
+    if (remainder.x === 0 && remainder.y === 0) {
+      sum += cost;
+    }
   }
   return sum;
 }
