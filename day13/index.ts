@@ -84,32 +84,22 @@ export function simulateGames(
       return { result, prevRow };
     }
 
-    const toFilter = new Set<number>();
-
     const currentRow: Score[] = Array(prevRow.length - 2);
     const middle = Math.floor(currentRow.length / 2);
 
     for (let j = currentRow.length; j > middle; j--) {
       currentRow[j] = updateScore(prevRow[j + 1], "a");
       result = updateResult(currentRow[j], result);
-      if (isDeadEnd(currentRow[j])) {
-        toFilter.add(j);
-      }
     }
 
     for (let j = middle; j >= 0; j--) {
       currentRow[j] = updateScore(prevRow[j], "b");
       result = updateResult(currentRow[j], result);
-      if (isDeadEnd(currentRow[j])) {
-        toFilter.add(j);
-      }
     }
 
     return upsideDownTriangle(
       result,
-      toFilter.size === 0
-        ? currentRow
-        : currentRow.filter((_, i) => toFilter.has(i) === false),
+      currentRow,
     );
   }
 
