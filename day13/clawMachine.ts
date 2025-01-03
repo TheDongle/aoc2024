@@ -23,6 +23,10 @@ export class Button {
     this.cost = cost;
     Object.freeze(this);
   }
+  get relativeValue(): number {
+    const { x, y } = this.strength;
+    return (x + y) / this.cost;
+  }
 }
 
 interface ClawHelper {

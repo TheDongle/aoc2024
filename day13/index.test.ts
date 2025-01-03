@@ -33,3 +33,9 @@ describe("Part One", () => {
     expect(partOne("./day13/puzzle.txt")).toBe(answer["13"]["1"]);
   });
 });
+
+// describe("Part Two", () => {
+//   it("Solves tutorial", () => {
+//     expect(partTwo("./day13/example.txt")).toBe(480);
+//   });
+// });
