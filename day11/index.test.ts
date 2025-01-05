@@ -84,6 +84,13 @@ const maintests: { input: { path: string; blinks: number }; output: number }[] =
       },
       output: answer["11"]["1"],
     },
+    // {
+    //   input: {
+    //     path: "./day11/puzzle.txt",
+    //     blinks: 75,
+    //   },
+    //   output: 0,
+    // },
   ];
 
 describe("Main - Part One", () => {

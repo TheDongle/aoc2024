@@ -38,11 +38,12 @@ export function getNextStone(stone: Stone): Stone[] {
   if (engraving === 0 && blinksRemaining >= 5) {
     return baseStoneList(blinksRemaining - 5);
   }
-  
+
   return getNextEngraving(engraving).map((v) =>
     new Stone(v, blinksRemaining - 1)
   );
 }
+
 
 export function blinkAtStones(path: string, blinks: number): number {
   const stoneArray = Deno.readTextFileSync(path).split(" ").map((v) =>
