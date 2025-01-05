@@ -1,72 +1,82 @@
-import TextParser from "../day2/parse.ts";
+import { Position, rotate, takeStep } from "./movement.ts";
+import { StringMap } from "./level.ts";
+import { DirectionDescription } from "./movement.ts";
 
-const markers = {
-  "guard": "^",
-  "space": ".",
-  "obstacle": "#",
-} as const;
+const isEdge = (description: string) =>
+  description === "space" || description === "guard";
 
-export function parseData(path: string): {
-  map: string[][];
-  position: [number, number];
-  heading: number;
-} {
-  const map = new TextParser(path).stringArrays(/./g);
-  for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[i].length; j++) {
-      if (map[i][j] === "^") {
-        return {
-          map: map,
-          position: [i, j],
-          heading: 0,
-        };
-      }
+// const isVertex = (description: string) =>
+//   description === "obstacle" || description === "wall";
+
+function traverseEdge(
+  map: StringMap,
+  position: Position,
+  heading: number,
+  direction: DirectionDescription,
+): { path: Set<string>; destination: Position; restStops: Set<string> } {
+  const edges = new Set<string>();
+  const visited = new Set<string>();
+
+  const isAdjacentVertex = (position: Position) =>
+    map.characterAt(takeStep(position, heading, "left")) === "obstacle";
+
+  while (isEdge(map.characterAt(position))) {
+    edges.add(JSON.stringify(position));
+    if (isAdjacentVertex(position)) {
+      visited.add(JSON.stringify(position));
     }
+    position = takeStep(position, heading, direction);
   }
-  throw new Error("Guard is on break");
+
+  const destination = takeStep(position, rotate(heading, "back"), "front");
+  return { path: edges, destination, restStops: visited };
 }
 
-const rotations: { [index: number]: [number, number] } = {
-  0: [-1, 0],
-  90: [0, 1],
-  180: [1, 0],
-  270: [0, -1],
-};
-
-const handleStep = (
-  row: number,
-  col: number,
+function traverseAllEdges(
+  map: StringMap,
+  position: Position,
   heading: number,
-): [number, number] => {
-  const [rowMod, colMod] = rotations[heading];
-  return [row + rowMod, col + colMod];
-};
+  direction: "front" | "back",
+): { [index: string]: Set<number> } {
+  const vertices: { [index: string]: Set<number> } = {};
+  const edges: { [index: string]: Set<number> } = {};
 
-const handleRotate = (
-  map: string[][],
-  row: number,
-  col: number,
-  heading: number,
-): number => {
-  const [nextRow, nextCol] = handleStep(row, col, heading);
-  if (map[nextRow]?.[nextCol] === markers["obstacle"]) {
-    return heading === 270 ? 0 : heading + 90;
-  }
-  return heading;
-};
+  const somewhereToGo = () =>
+    map.characterAt(
+      takeStep(position, heading, direction === "front" ? "left" : "right"),
+    ) !== "wall";
 
-export function partOne(path: string): number {
-  const data = parseData(path);
-  let [row, col] = data.position;
-  const { map } = data;
-  let { heading } = data;
-  const visited = new Set<string>();
-  while (0 <= row && 0 <= col && row < map.length && col < map[row].length) {
-    visited.add(JSON.stringify([row, col]));
-    heading = handleRotate(map, row, col, heading);
-    const nextPosition = handleStep(row, col, heading);
-    row = nextPosition[0];
-    col = nextPosition[1];
+  // Travelling
+  while (somewhereToGo()) {
+    const journey = traverseEdge(map, position, heading, "front");
+    // record journey
+    vertices[JSON.stringify(journey.destination)] =
+      (vertices[JSON.stringify(journey.destination)] ?? new Set<number>()).add(
+        heading,
+      );
+    for (const key of journey.path.keys()) {
+      edges[key] = (edges[key] ?? new Set<number>()).add(heading);
+    }
+    // update position
+    position = journey.destination;
+    heading = rotate(heading, direction === "front" ? "right" : "left");
   }
-  return visited.size;
+
+  return edges;
+}
+
+export default function (
+  path: string,
+  boxMode = false,
+): number {
+  const labMap = new StringMap(path);
+  const guardPosition = labMap.findCharacter("guard");
+  const guardHeading = 0;
+  const edges = traverseAllEdges(
+    labMap,
+    guardPosition,
+    guardHeading,
+    "front",
+  );
+  return Object.keys(edges).length;
 }

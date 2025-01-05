@@ -1,43 +1,41 @@
 import { describe, it } from "@std/testing/bdd";
-import { parseData, partOne } from "./index.ts";
+import { default as main } from "./index.ts";
 import { expect } from "@std/expect/expect";
 import answer from "../spoilers.json" with { type: "json" };
 
-const parseTest = {
-  input: "./day6/example.txt",
-  output: {
-    position: [6, 4],
-    heading: 0,
-  },
-};
-
-describe("Parse Data", () => {
-  const { position, heading } = parseData(parseTest.input);
-  it("knows correct guard position", () => {
-    expect(position).toMatchObject({ ...parseTest.output.position });
-  });
-  it("knows correct heading", () => {
-    expect(heading).toBe(parseTest.output.heading);
-  });
-});
-
-const maintests: { name: string; input: string; output: number }[] = [
+const maintests: {
+  name: string;
+  input: string;
+  output1: number;
+  output2: number;
+}[] = [
   {
     name: "Tutorial",
     input: "./day6/example.txt",
-    output: 41,
+    output1: 41,
+    output2: 6,
   },
   {
     name: "Puzzle",
     input: "./day6/puzzle.txt",
-    output: answer["6"]["1"],
+    output1: answer["6"]["1"],
+    output2: 0,
   },
 ];
 
-describe("Part One - Main", () => {
-  maintests.forEach((t) => {
-    it(`returns ${t.output} for ${t.name} input`, () => {
-      expect(partOne(t.input)).toBe(t.output);
+describe("Main", () => {
+  describe("Part One", () => {
+    maintests.forEach((t) => {
+      it(`returns ${t.output1} for ${t.name} input`, () => {
+        expect(main(t.input)).toBe(t.output1);
+      });
     });
   });
+  // describe("Part two", () => {
+  //   maintests.forEach((t) => {
+  //     it(`returns ${t.output2} for ${t.name} input`, () => {
+  //       expect(main(t.input, true)).toBe(t.output2);
+  //     });
+  //   });
+  // });
 });
