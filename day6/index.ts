@@ -67,7 +67,6 @@ function traverseAllEdges(
 
 export default function (
   path: string,
-  boxMode = false,
 ): number {
   const labMap = new StringMap(path);
   const guardPosition = labMap.findCharacter("guard");
