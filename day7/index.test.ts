@@ -1,4 +1,4 @@
-import { expect } from "@std/expect";
+import { expect } from "@std/expect/expect";
 import {
   default as sumOfValidEquations,
   type Operation,
