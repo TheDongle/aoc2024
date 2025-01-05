@@ -22,20 +22,22 @@ const nextPosition = (
   return [row + (rowMod * rowMultipler), col + (colMod * colMultipler)];
 };
 
-const paths: Record<"diagonal" | "cardinal", Direction[]> = {
+const paths = {
   diagonal: [
     "SE",
     "SW",
     "NW",
     "NE",
-  ],
+  ] as const,
   cardinal: [
     "E",
     "S",
     "W",
     "N",
-  ],
+  ] as const,
 };
 
-export { nextPosition, paths };
-export type { Direction };
+type Position = [number,number]
+
+export { directions, nextPosition, paths };
+export type { Direction, Position };
