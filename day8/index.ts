@@ -36,37 +36,89 @@ function spaceBetween(pos1: Position, pos2: Position): [number, number] {
 type PositionPair = [Position, Position];
 
 // Given two antenna, retrieve position of two antinodes
+// export function findAntiNodes(
+//   position: Position,
+//   compare: Position,
+// ): PositionPair {
+//   const [rowMultipler, colMultipler] = spaceBetween(position, compare);
+
+//   const posToCompDirection = whichWayIs(position, compare);
+//   const compToPosDirection = oppositeDirection[posToCompDirection];
+
+//   const [row, col] = position;
+//   const [comparerow, compareCol] = compare;
+
+//   return [
+//     nextPosition(
+//       row,
+//       col,
+//       compToPosDirection,
+//       rowMultipler,
+//       colMultipler,
+//     ),
+//     nextPosition(
+//       comparerow,
+//       compareCol,
+//       posToCompDirection,
+//       rowMultipler,
+//       colMultipler,
+//     ),
+//   ];
+// }
+
 export function findAntiNodes(
   position: Position,
   compare: Position,
-): PositionPair {
+  map: string[],
+  moreNodes = false,
+): Position[] {
   const [rowMultipler, colMultipler] = spaceBetween(position, compare);
 
-  const posToCompDirection = whichWayIs(position, compare);
-  const compToPosDirection = oppositeDirection[posToCompDirection];
+  const posToCompDirection: Direction = whichWayIs(position, compare);
+  const compToPosDirection: Direction = oppositeDirection[posToCompDirection];
 
   const [row, col] = position;
-  const [comparerow, compareCol] = compare;
+  const currAntenna = map[row][col];
 
-  return [
-    nextPosition(
+  const antiNodeInner = (
+    currPosition: Position,
+    direction: Direction,
+    moreNodes = false,
+    res: [number, number][] = [],
+  ): [number, number][] => {
+    const [row, col] = currPosition;
+    const [antiRow, antiCol] = nextPosition(
       row,
       col,
-      compToPosDirection,
+      direction,
       rowMultipler,
       colMultipler,
-    ),
-    nextPosition(
-      comparerow,
-      compareCol,
-      posToCompDirection,
-      rowMultipler,
-      colMultipler,
-    ),
+    );
+    const currAntiNode = map[antiRow]?.[antiCol];
+    if (currAntiNode === undefined) {
+      return res;
+    }
+    const nextRes: [number, number][] = currAntiNode !== currAntenna
+      ? [...res, [antiRow, antiCol]]
+      : res;
+    if (moreNodes) {
+      return antiNodeInner(
+        [antiRow, antiCol],
+        direction,
+        moreNodes,
+        nextRes,
+      );
+    }
+    return nextRes;
+  };
+
+  return [
+    ...antiNodeInner(position, compToPosDirection, moreNodes),
+    ...antiNodeInner(compare, posToCompDirection, moreNodes),
   ];
 }
 
-export function countAntiNodes(path: string): number {
+export function countAntiNodes(path: string, moreNodes = false): number {
   const map = new TextParser(path).newLineArray();
 
   const antennaeSeen = new Map<string, Position[]>();
@@ -75,7 +127,9 @@ export function countAntiNodes(path: string): number {
   const handleAntenna = (currAntenna: string, currPos: Position) => {
     const prevPositions = antennaeSeen.get(currAntenna) ?? [];
     for (const prevPos of prevPositions) {
-      for (const antiPosition of findAntiNodes(currPos, prevPos)) {
+      for (
+        const antiPosition of findAntiNodes(currPos, prevPos, map, moreNodes)
+      ) {
         const [antiRow, antiCol] = antiPosition;
         const currAntiNode = map[antiRow]?.[antiCol];
         if (currAntiNode !== undefined && currAntiNode !== currAntenna) {

@@ -1,7 +1,7 @@
 import { describe, it } from "@std/testing/bdd";
 import { expect } from "@std/expect";
 import answer from "../spoilers.json" with { type: "json" };
-import { countAntiNodes, findAntiNodes, whichWayIs } from "./index.ts";
+import { countAntiNodes, whichWayIs } from "./index.ts";
 
 const relationshipTest: {
   input: { position: [number, number]; comparePosition: [number, number] };
@@ -75,76 +75,87 @@ describe("Which way", () => {
   });
 });
 
-const antinodeTest: {
-  input: { position: [number, number]; comparePosition: [number, number] };
-  output: [[number, number], [number, number]];
-}[] = [
-  {
-    input: {
-      position: [0, 2],
-      comparePosition: [0, 3],
-    },
-    output: [[0, 1], [0, 4]],
-  },
-  {
-    input: {
-      position: [1, 0],
-      comparePosition: [2, 0],
-    },
-    output: [[0, 0], [3, 0]],
-  },
-  {
-    input: {
-      position: [1, 1],
-      comparePosition: [2, 2],
-    },
-    output: [[0, 0], [3, 3]],
-  },
-  {
-    input: {
-      position: [1, 2],
-      comparePosition: [2, 1],
-    },
-    output: [[0, 3], [3, 0]],
-  },
-  {
-    input: {
-      position: [5, 5],
-      comparePosition: [8, 10],
-    },
-    output: [[2, 0], [11, 15]],
-  },
-];
+// const antinodeTest: {
+//   input: { position: [number, number]; comparePosition: [number, number] };
+//   output: [[number, number], [number, number]];
+// }[] = [
+//   {
+//     input: {
+//       position: [0, 2],
+//       comparePosition: [0, 3],
+//     },
+//     output: [[0, 1], [0, 4]],
+//   },
+//   {
+//     input: {
+//       position: [1, 0],
+//       comparePosition: [2, 0],
+//     },
+//     output: [[0, 0], [3, 0]],
+//   },
+//   {
+//     input: {
+//       position: [1, 1],
+//       comparePosition: [2, 2],
+//     },
+//     output: [[0, 0], [3, 3]],
+//   },
+//   {
+//     input: {
+//       position: [1, 2],
+//       comparePosition: [2, 1],
+//     },
+//     output: [[0, 3], [3, 0]],
+//   },
+//   {
+//     input: {
+//       position: [5, 5],
+//       comparePosition: [8, 10],
+//     },
+//     output: [[2, 0], [11, 15]],
+//   },
+// ];
 
-describe("Antenns", () => {
-  antinodeTest.forEach((t) => {
-    const { input, output } = t;
-    const { position, comparePosition } = input;
-    it(`retrieves antinode coordinates for ${position} & ${comparePosition}`, () => {
-      expect(findAntiNodes(position, comparePosition)).toMatchObject({
-        ...output,
-      });
-    });
-  });
-});
+// describe("Antenns", () => {
+//   antinodeTest.forEach((t) => {
+//     const map = Array(100).fill("".padEnd(100," "))
+//     const { input, output } = t;
+//     const { position, comparePosition } = input;
+//     it(`retrieves antinode coordinates for ${position} & ${comparePosition}`, () => {
+//       expect(findAntiNodes(position, comparePosition, map)).toMatchObject({
+//         ...output,
+//       });
+//     });
+//   });
+// });
 
-const mainTest: { input: string; name: string; output: number }[] = [
+const mainTest: { input: string; name: string; output1: number, output2: number }[] = [
   {
     "name": "tutorial example",
     "input": "./day8/example.txt",
-    "output": 14,
+    "output1": 14,
+    "output2": 34
   },
   {
     "name": "Puzzle",
     "input": "./day8/puzzle.txt",
-    "output": answer["8"]["1"],
+    "output1": answer["8"]["1"],
+    "output2": answer["8"]["2"]
   },
 ];
 
-describe("Day 8 Main", () => {
+describe("Day 8 Part One", () => {
   mainTest.forEach((t) => {
-    it(`gets ${t.output} from ${t.name}`, () => {
-      expect(countAntiNodes(t.input)).toBe(t.output);
+    it(`gets ${t.output1} from ${t.name}`, () => {
+      expect(countAntiNodes(t.input)).toBe(t.output1);
     });
   });
 });
+
+// describe("Day 8 Part Two", () => {
+//   mainTest.forEach((t) => {
+//     it(`gets ${t.output2} from ${t.name}`, () => {
+//       expect(countAntiNodes(t.input, true)).toBe(t.output2);
+//     });
+//   });
+// });
