@@ -19,6 +19,7 @@ describe("One claw machine", () => {
         b: ({ x: b.x, y: b.y, cost: 1 }),
         prize: ({ x: prize.x, y: prize.y }),
       }),
+      { x: prize.x, y: prize.y },
       100,
     );
     expect(ans.cost).toBe(280);
